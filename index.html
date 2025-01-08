@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OI Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #282c34;
+            color: white;
+            text-align: center;
+        }
+        canvas {
+            border: 2px solid white;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>OI Game</h1>
+    <p>Click on the moving object to earn points!</p>
+    <p>Score: <span id="score">0</span></p>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+
+        let score = 0;
+        let objectX = Math.random() * (canvas.width - 50);
+        let objectY = Math.random() * (canvas.height - 50);
+        const objectSize = 50;
+
+        function drawObject() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'red';
+            ctx.fillRect(objectX, objectY, objectSize, objectSize);
+        }
+
+        function moveObject() {
+            objectX = Math.random() * (canvas.width - objectSize);
+            objectY = Math.random() * (canvas.height - objectSize);
+        }
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+
+            if (
+                clickX >= objectX &&
+                clickX <= objectX + objectSize &&
+                clickY >= objectY &&
+                clickY <= objectY + objectSize
+            ) {
+                score++;
+                scoreElement.textContent = score;
+                moveObject();
+            }
+        });
+
+        function gameLoop() {
+            drawObject();
+            requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop();
+    </script>
+</body>
+</html>
